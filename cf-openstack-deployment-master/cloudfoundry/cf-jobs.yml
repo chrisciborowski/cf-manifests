@@ -1,0 +1,425 @@
+---
+networks: (( merge ))
+
+meta:
+  secret: steelmouse88
+  environment: ~
+  domain: 69.36.245.71.xip.io
+  protocol: http
+
+  release:
+    name: cf
+
+  networks:
+    z1:
+      apps: cf1
+      management: cf1
+
+  loggregator_endpoint:
+    z1:
+      host: 0.loggregator_trafficcontroller.default.cf-173.bosh
+
+  nfs_server:
+    address: 0.nfs-server.default.cf-173.bosh
+    network: "*.cf-173.bosh"
+    share: ~
+
+jobs:
+  - name: ha_proxy_z1
+    release: (( meta.release.name ))
+    template: haproxy
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+        default: [dns, gateway]
+      - name: floating
+        static_ips: 69.36.245.71
+    properties:
+      networks: (( meta.networks.z1 ))
+      ha_proxy:
+        ssl_pem: |
+         -----BEGIN RSA PRIVATE KEY-----
+         MIICXQIBAAKBgQCqV060ID0/Bi7345OP8YfMXdR2dxFW6b7nOnZNbKt8jxmYsKVi
+         IX3EmKG9knH2WypmplASCN3Q0m6+IS9uCk+C/wKRdCQ4WGzESdg0eP3r86g8bP9v
+         T3RO0xkb0cm8LXs3dWtGMfEHiN2EQvnUyWfzjiXmLyZ8EIKCP59XuHdhTQIDAQAB
+         AoGAEuIEzoD4aSElWcN3mzBaLnSEVfGTEYBt8jIP5TtTs0Ylv0BtxPgTehS1cU9n
+         pLisdZ6gJ6+l7z00m40QNfGcqKmHGvOpCOvZVOVw/60iB1KOD5Fq6FCKlrRh+ejK
+         s22CuwLJiheU6kjx3cTnsqZsYXDfVa+U1HgEXvWr5KJ6N8ECQQDZ6nodQaePMTQW
+         +HAMDV9DjgJB48f2g23LJmBffL45OtuVskcxu6wAPxn0Mw1m604TnsZOLbuMRLDs
+         TnWJ8Ed9AkEAyBxWh0Q5J5bxZD7VcMp6IefnYPgkz+friGZfBuAixRAZtwoL5LkU
+         bfBRMQUGGmPYEheLCe9FeQqnWy3YwqLKEQJAXSwQ/DNXJjU+dVfR6IVLJwIv2uY+
+         WBtHtWV6LTmTx7pvqqioIg6A8zYHrc6qO0f+gQsQ9No+5zFziAXf4ZN3rQJBAL6G
+         rKPxgvF8t6yYXqQbRBmQMS6UVIhW6lxeC9ACC1jRMYqi2BwXU6oxCzy+6caqlYj0
+         PX9h/yV1zU304tK+J+ECQQCd9fncmgJ73r9fguTJo5S/UlG81Lx9VkTLjgUfApCA
+         46w9Byj8f7+glZjlQm38Q4X4V6cbe/FerLsc7SIrXaIJ
+         -----END RSA PRIVATE KEY-----
+         -----BEGIN CERTIFICATE-----
+         MIIDtTCCAx6gAwIBAgIJANTsZDRp8cyeMA0GCSqGSIb3DQEBBQUAMIGZMQswCQYD
+         VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEXMBUGA1UEBxMOQ29yb25hIGRl
+         bCBNYXIxFDASBgNVBAoTC05lYnVsYXdvcmtzMQswCQYDVQQLEwJJVDEUMBIGA1UE
+         AxMLTmVidWxhd29ya3MxIzAhBgkqhkiG9w0BCQEWFGluZm9AbmVidWxhd29ya3Mu
+         Y29tMB4XDTE0MDgwMTE5MDQ1NVoXDTE1MDgwMTE5MDQ1NVowgZkxCzAJBgNVBAYT
+         AlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRcwFQYDVQQHEw5Db3JvbmEgZGVsIE1h
+         cjEUMBIGA1UEChMLTmVidWxhd29ya3MxCzAJBgNVBAsTAklUMRQwEgYDVQQDEwtO
+         ZWJ1bGF3b3JrczEjMCEGCSqGSIb3DQEJARYUaW5mb0BuZWJ1bGF3b3Jrcy5jb20w
+         gZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKpXTrQgPT8GLvfjk4/xh8xd1HZ3
+         EVbpvuc6dk1sq3yPGZiwpWIhfcSYob2ScfZbKmamUBII3dDSbr4hL24KT4L/ApF0
+         JDhYbMRJ2DR4/evzqDxs/29PdE7TGRvRybwtezd1a0Yx8QeI3YRC+dTJZ/OOJeYv
+         JnwQgoI/n1e4d2FNAgMBAAGjggEBMIH+MB0GA1UdDgQWBBSEHRAJDTiL6VmXUZ+3
+         1QYyUO8hmTCBzgYDVR0jBIHGMIHDgBSEHRAJDTiL6VmXUZ+31QYyUO8hmaGBn6SB
+         nDCBmTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFzAVBgNVBAcT
+         DkNvcm9uYSBkZWwgTWFyMRQwEgYDVQQKEwtOZWJ1bGF3b3JrczELMAkGA1UECxMC
+         SVQxFDASBgNVBAMTC05lYnVsYXdvcmtzMSMwIQYJKoZIhvcNAQkBFhRpbmZvQG5l
+         YnVsYXdvcmtzLmNvbYIJANTsZDRp8cyeMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcN
+         AQEFBQADgYEAVPJEEErPGOawy03PdStUwoBwFDbKDYno1Hh58e23UufkHUFjFoC/
+         tF0J3/Mw1wBRcdFrEJrJQ0gfOVKz8rbyGFkBHwafB8bCBo16sYitJEyQnyKSqBR1
+         z96KRmcNzYmlbiSdKHSf61sxXCvGEwDkqKcfbKghZsAt9cpvg+k4tq0=
+         -----END CERTIFICATE-----
+      router:
+        servers:
+          z1: 0.router.default.cf-173.bosh
+
+  - name: nats_z1
+    release: (( meta.release.name ))
+    template: (( merge || ["nats", "nats_stream_forwarder"] ))
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: logs_z1
+    release: (( meta.release.name ))
+    template: syslog_aggregator
+    instances: 0
+    resource_pool: medium_z1
+    persistent_disk: 100000
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: stats_z1
+    release: (( meta.release.name ))
+    template: collector
+    instances: 0
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: nfs_z1
+    release: (( meta.release.name ))
+    template: debian_nfs_server
+    instances: 1
+    resource_pool: small_z1
+    persistent_disk: 102400
+    networks:
+      - name: cf1
+
+  - name: postgres_z1
+    release: (( meta.release.name ))
+    template: postgres
+    instances: 1
+    resource_pool: small_z1
+    persistent_disk: 4096
+    networks:
+    - name: cf1
+    properties:
+      db: databases
+
+  - name: uaa_z1
+    release: (( meta.release.name ))
+    template: uaa
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: login_z1
+    release: (( meta.release.name ))
+    template: login
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: api_z1
+    release: (( meta.release.name ))
+    template: cloud_controller_ng
+    instances: 1
+    resource_pool: small_z1
+    persistent_disk: 0
+    networks:
+      - name: cf1
+    properties:
+      ccdb: ccdb
+      networks: (( meta.networks.z1 ))
+      loggregator_endpoint:
+        host: (( meta.loggregator_endpoint.z1.host ))
+      nfs_server: (( meta.nfs_server ))
+
+  - name: clock_global
+    release: (( meta.release.name ))
+    template: cloud_controller_clock
+    instances: 1
+    resource_pool: small_z1
+    persistent_disk: 0
+    networks:
+      - name: cf1
+    properties:
+      ccdb: ccdb
+      networks: (( meta.networks.z1 ))
+      loggregator_endpoint:
+        host: (( meta.loggregator_endpoint.z1.host ))
+
+  - name: api_worker_z1
+    release: (( meta.release.name ))
+    template: cloud_controller_worker
+    instances: 1
+    resource_pool: small_z1
+    persistent_disk: 0
+    networks:
+      - name: cf1
+    properties:
+      ccdb: ccdb
+      networks: (( meta.networks.z1 ))
+      loggregator_endpoint:
+        host: (( meta.loggregator_endpoint.z1.host ))
+      ccng:
+        process_group: worker
+      nfs_server: (( meta.nfs_server ))
+
+  - name: etcd_leader_z1
+    release: (( meta.release.name ))
+    template: etcd
+    instances: 0
+    persistent_disk: 10024
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+
+  - name: etcd_z1
+    release: (( meta.release.name ))
+    template: etcd
+    instances: 0
+    persistent_disk: 10024
+    resource_pool: medium_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+      leader_ip: (( .properties.etcd.machines ))
+
+  - name: hm9000_z1
+    release: (( meta.release.name ))
+    template: hm9000
+    instances: 0
+    resource_pool: medium_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+      etcd_ips: (( .properties.etcd.machines ))
+
+  - name: runner_z1
+    release: (( meta.release.name ))
+    template: (( merge || ["dea_next", "dea_logging_agent"] ))
+    instances: 1
+    update:
+      max_in_flight: 1
+    resource_pool: runner_z1
+    networks:
+      - name: cf1
+        default: [dns, gateway]
+    properties:
+      networks: (( meta.networks.z1 ))
+      loggregator_endpoint:
+        host: (( meta.loggregator_endpoint.z1.host ))
+
+  - name: loggregator_z1
+    release: (( meta.release.name ))
+    template: loggregator
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties: 
+      networks: (( meta.networks.z1 ))
+
+  - name: loggregator_trafficcontroller_z1
+    release: (( meta.release.name ))
+    template: loggregator_trafficcontroller
+    instances: 1
+    resource_pool: small_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+      traffic_controller:
+        zone: z1
+
+  - name: router_z1
+    release: (( meta.release.name ))
+    template: gorouter
+    instances: 1
+    resource_pool: router_z1
+    networks:
+      - name: cf1
+    properties:
+      networks: (( meta.networks.z1 ))
+      loggregator_endpoint:
+        host: (( meta.loggregator_endpoint.z1.host ))
+
+# Property Section
+properties:
+  domain: (( merge ))
+  ssl:
+    skip_cert_verify: (( merge || true ))
+  system_domain: (( domain ))
+  system_domain_organization: ~
+  app_domains: (( [domain] ))
+
+  disk_quota_enabled: true
+  cc_api_version: v2
+  request_timeout_in_seconds: 300
+
+  etcd:
+    machines: 0.etcd.default.cf-173.bosh
+
+  etcd_metrics_server:
+    nats:
+      machines: (( .properties.nats.machines ))
+      username: (( .properties.nats.user ))
+      password: (( .properties.nats.password ))
+
+  databases:
+    db_scheme: postgres
+    address: 0.postgres.default.cf-173.bosh
+    port: 5524
+    roles: (( merge))
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+      - tag: uaa
+        name: uaadb
+        citext: true
+
+  nats:
+    user: (( merge ))
+    password: (( merge ))
+    address: 0.nats.default.cf-173.bosh
+    machines:
+     - 0.nats.default.cf-173.bosh
+    port: 4222
+    use_gnatsd: (( merge || true ))
+    debug: false
+    trace: false
+
+
+  uaa_client_id: "cf"
+  uaa_endpoint: (( merge ))
+  uaa_client_auth_credentials:
+    username: (( merge ))
+    password: (( merge )) # CHANGE
+
+  dea_next:
+    memory_mb: (( merge ))
+    memory_overcommit_factor: 3
+    disk_mb: (( merge ))
+    disk_overcommit_factor: 2
+    staging_disk_inode_limit: 200000
+    instance_disk_inode_limit: 200000
+    deny_networks: (( merge || [] ))
+    allow_networks: (( merge || [] ))
+    kernel_network_tuning_enabled: true
+    directory_server_protocol: (( meta.protocol )) # NEEDS TO BE CHANGED
+    evacuation_bail_out_time_in_seconds: 600
+
+  loggregator_endpoint:
+    shared_secret: (( merge ))
+    host: (( meta.loggregator_endpoint.z1.host ))
+    port: 3456
+
+  logger_endpoint:  ~
+
+  loggregator:
+    servers:
+      z1: (( meta.loggregator_endpoint.z1.host ))
+    maxRetainedLogMessages: 1000
+    debug: (( merge || true ))
+    blacklisted_syslog_ranges: ~
+    nats:
+      user: nats
+      password: (( merge ))
+      address: (( properties.nats.address ))
+      port: 4222
+
+  cc: (( merge ))
+  ccdb: 
+    db_scheme: postgres
+    address: (( properties.databases.address ))
+    port: 5524
+    roles: (( merge ))
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+
+  ccng: (( cc ))
+  ccdb_ng:
+    db_scheme: postgres
+    address: (( properties.databases.address ))
+    port: 5524
+    roles: (( merge ))
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+
+  uaa: (( merge ))
+  uaadb:
+    db_scheme: postgresql
+    address: (( properties.databases.address ))
+    port: 5524
+    roles: (( merge ))
+    databases:
+      - tag: uaa
+        name: uaadb
+        citext: true
+
+  login: (( merge ))
+
+  router:
+    status:
+      user: (( merge ))
+      password: (( merge ))
+
+  syslog_aggregator: ~
+
+  nfs_server:
+    address: (( meta.nfs_server.address ))
+    network: (( meta.nfs_server.network ))
+
+  debian_nfs_server:
+    no_root_squash: true
+
+  collector:
+    use_datadog: true
+    datadog_api_key: ""
+    datadog_application_key: ""
+    deployment_name: (( meta.environment ))
+    use_tsdb: false
+
+  opentsdb: (( merge || nil ))
+  

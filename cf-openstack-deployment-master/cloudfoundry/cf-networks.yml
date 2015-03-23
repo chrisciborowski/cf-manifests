@@ -1,0 +1,12 @@
+networks:
+  - name: floating
+    type: vip
+    cloud_properties: 
+      security_groups:
+      - cf-public
+  - name: cf1
+    type: dynamic
+    cloud_properties:
+       security_groups:
+       - cf-public
+       - cf-private
